@@ -27,7 +27,7 @@ export default function EventDetails() {
         className="flex flex-col items-center text-center mt-2 mb-8 px-4"
       >
         <div className="relative">
-          <span className="font-sacviet tracking-[1px] text-[clamp(26px,6vw,32px)] text-[#801429] leading-tight block uppercase">
+          <span className="font-bigbang tracking-[1px] text-[clamp(26px,6vw,32px)] text-[#801429] leading-tight block uppercase">
             {guestName || "ANH - CHỊ - EM"}
           </span>
         </div>
