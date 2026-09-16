@@ -9,7 +9,7 @@ export default function PartyRules() {
       tag: "AN TOÀN",
       title: "An Toàn Là Trên Hết",
       icon: <Car size={18} className="text-[#801429]" />,
-      content: "Đã uống xe thì không lái rượu bia",
+      content: "Mọi người khi đã uống xe thì không lái rượu bia nha",
     },
     {
       id: "2",
