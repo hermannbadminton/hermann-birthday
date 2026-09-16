@@ -14,7 +14,7 @@ export default function Gifting() {
         viewport={{ once: true }}
         className="max-w-[400px] mx-auto text-center"
       >
-        <h2 className="text-titleSection font-extrabold uppercase text-rose-800 tracking-wide font-nvnvalky mb-1">
+        <h2 className="text-titleSection font-extrabold uppercase text-rose-800 tracking-wide font-sacviet mb-1">
           XÂY DỰNG HERMANN
         </h2>
         <p className="text-[16px] text-rose-900/90 font-sacviet mt-2 leading-relaxed">

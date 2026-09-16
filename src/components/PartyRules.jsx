@@ -52,7 +52,7 @@ export default function PartyRules() {
     >
       {/* Section Header */}
       <div className="text-center mb-8 relative">
-        <h2 className="text-titleSection font-nvnvalky text-rose-800 uppercase tracking-[1px] leading-[44px]">
+        <h2 className="text-titleSection font-sacviet text-rose-800 uppercase tracking-[1px] leading-[44px]">
           Một số lưu ý nhỏ
         </h2>
         <p className="text-[16px] text-rose-900/90 font-sacviet mt-2 leading-relaxed">
@@ -83,7 +83,7 @@ export default function PartyRules() {
                   className={`bg-[#801429] text-white font-nvnvalky uppercase px-8 py-3 text-[20px] tracking-widest shadow-md ${isRight ? "rounded-l-full" : "rounded-r-full"
                     }`}
                 >
-                  {rule.number}: {rule.tag}
+                  {rule.number}: <span className="font-sacviet">{rule.tag}</span>
                 </div>
               </div>
 

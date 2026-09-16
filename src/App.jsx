@@ -7,8 +7,9 @@ import Gifting from "./components/Gifting";
 import Footer from "./components/Footer";
 import FallingHearts from "./components/FallingHearts";
 import TikTokStream from "./components/TikTokStream";
+import { GuestProvider } from "./context/GuestContext";
 
-function App() {
+function AppContent() {
   useEffect(() => {
     // Clear hash if it exists to prevent browser jumping
     if (window.location.hash) {
@@ -63,4 +64,11 @@ function App() {
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <GuestProvider>
+      <AppContent />
+    </GuestProvider>
+  );
+}
+

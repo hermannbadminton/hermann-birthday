@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
-import { Navigation} from "lucide-react";
+import { Navigation } from "lucide-react";
+import { useGuest } from "../context/GuestContext";
 
 export default function EventDetails() {
   const address = "35 P. Nguyễn Đức Cảnh, Lê Chân";
   const googleMapUrl = "https://maps.app.goo.gl/j4UeTtXPQf7z3GnG7";
+  const { guestName } = useGuest();
 
   return (
     <section
@@ -12,7 +14,7 @@ export default function EventDetails() {
     >
       {/* Header section with signature typography */}
       <div className="text-center mb-0 relative">
-        <h2 className="text-titleSection font-nvnvalky text-rose-800 uppercase tracking-[1px] leading-[44px]">
+        <h2 className="text-titleSection font-sacviet text-rose-800 uppercase tracking-[1px] leading-[44px]">
           THÂN MỜI
         </h2>
       </div>
@@ -22,11 +24,11 @@ export default function EventDetails() {
         initial={{ opacity: 0, scale: 0.9 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
-        className="flex flex-col items-center text-center mt-2 mb-8"
+        className="flex flex-col items-center text-center mt-2 mb-8 px-4"
       >
         <div className="relative">
-          <span className="font-nvnvalky tracking-[1px] text-[clamp(26px,6vw,32px)] text-[#801429] leading-tight block">
-            ANH - CHỊ - EM
+          <span className="font-sacviet tracking-[1px] text-[clamp(26px,6vw,32px)] text-[#801429] leading-tight block uppercase">
+            {guestName || "ANH - CHỊ - EM"}
           </span>
         </div>
         <div className="w-12 h-0.5 bg-rose-400 mx-auto mt-3 rounded-full"></div>
@@ -43,7 +45,7 @@ export default function EventDetails() {
         >
           {/* Title Ribbon Banner */}
           <div className="flex w-full justify-end">
-            <div className="bg-[#801429] text-end text-white font-nvnvalky uppercase px-8 pr-3 py-3 text-[22px] tracking-widest shadow-md rounded-l-full">
+            <div className="bg-[#801429] text-end text-white font-sacviet uppercase px-8 pr-3 py-3 text-[22px] tracking-widest shadow-md rounded-l-full">
               <h1>Tiệc Sinh Nhật Lần 3</h1> 
               <h1>CLB CẦU LÔNG HERMANN</h1> 
             </div>

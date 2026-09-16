@@ -3,24 +3,38 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Gift, MessageCircle, X, ChevronUp, ChevronDown } from "lucide-react";
 import { supabase } from "../supabaseClient";
 import MusicPlayer from "./MusicPlayer";
+import { useGuest } from "../context/GuestContext";
 
-const WELCOME_MESSAGE = {
+const getWelcomeMessage = (name) => ({
   id: "welcome-msg",
   name: "CLB Cầu Lông Hermann 🏸",
-  content:
-    "Chào mừng anh, chị, em đến với bữa tiệc ngày hôm nay. Hãy gửi đến Hermann những lời chúc ấm áp nhất ❤️",
+  content: `Chào mừng ${name || "anh, chị, em"} đến với bữa tiệc ngày hôm nay. Hãy gửi đến Hermann những lời chúc ấm áp nhất ❤️`,
   isWelcome: true,
-};
+});
 
 export default function TikTokStream() {
+  const { guestName } = useGuest();
   const [isMinimized, setIsMinimized] = useState(false);
   const [showMessageModal, setShowMessageModal] = useState(false);
-  const [name, setName] = useState("");
+  const [name, setName] = useState(guestName || "");
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Messages already streamed and displayed on screen (starting with Welcome message)
-  const [displayedMessages, setDisplayedMessages] = useState([WELCOME_MESSAGE]);
+  const [displayedMessages, setDisplayedMessages] = useState(() => [
+    getWelcomeMessage(guestName),
+  ]);
+
+  useEffect(() => {
+    if (guestName) {
+      setName(guestName);
+      setDisplayedMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === "welcome-msg" ? getWelcomeMessage(guestName) : msg
+        )
+      );
+    }
+  }, [guestName]);
   const supabaseWishesRef = useRef([]);
   const streamIndexRef = useRef(0);
   const scrollContainerRef = useRef(null);
@@ -204,7 +218,7 @@ export default function TikTokStream() {
     // Update local UI immediately
     setDisplayedMessages((prev) => [...prev, newMsg]);
     setTimeout(scrollToBottom, 100);
-    setName("");
+    setName(guestName || "");
     setContent("");
     setShowMessageModal(false);
 

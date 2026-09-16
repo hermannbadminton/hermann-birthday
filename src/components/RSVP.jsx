@@ -1,15 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Send, CheckCircle2 } from "lucide-react";
+import { useGuest } from "../context/GuestContext";
 
 export default function RSVP() {
+  const { guestName } = useGuest();
   const [formData, setFormData] = useState({
-    name: "",
+    name: guestName || "",
     phone: "",
     attending: "yes",
     guests: "1",
     wishes: "",
   });
+
+  useEffect(() => {
+    if (guestName) {
+      setFormData((prev) => ({ ...prev, name: guestName }));
+    }
+  }, [guestName]);
 
 
   const [submitted, setSubmitted] = useState(false);
@@ -60,7 +68,7 @@ export default function RSVP() {
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-titleSection font-extrabold uppercase text-rose-800 tracking-wide font-nvnvalky"
+          className="text-titleSection font-extrabold uppercase text-rose-800 tracking-wide font-sacviet"
         >
           Xác Nhận Tham Dự
         </motion.h2>
@@ -96,7 +104,7 @@ export default function RSVP() {
               onClick={() => {
                 setSubmitted(false);
                 setFormData({
-                  name: "",
+                  name: guestName || "",
                   phone: "",
                   attending: "yes",
                   guests: "1",
