@@ -59,10 +59,10 @@ export default function EventDetails() {
             {/* Text Container */}
             <div className="flex flex-col justify-center gap-1 items-end text-right">
               <p className="text-[#801429] font-bold text-[18px] tracking-wide font-sans">
-                18h00 - Thứ Sáu
+                18h00 - Thứ Năm
               </p>
               <p className="text-[#801429] font-bold text-[18px] tracking-wide font-sans">
-                23 Tháng 10
+                22 Tháng 10
               </p>
             </div>
           </div>
