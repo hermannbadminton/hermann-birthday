@@ -38,6 +38,15 @@ export default function TikTokStream() {
   const supabaseWishesRef = useRef([]);
   const streamIndexRef = useRef(0);
   const scrollContainerRef = useRef(null);
+  const textareaRef = useRef(null);
+
+  // Auto-resize textarea height when typing more than 3 rows
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [content, showMessageModal]);
 
   // Auto scroll to bottom when new messages arrive
   const scrollToBottom = (behavior = "smooth") => {
@@ -358,9 +367,9 @@ export default function TikTokStream() {
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="relative w-full max-w-[340px] bg-white rounded-3xl p-5 shadow-2xl z-10"
+              className="relative w-full max-w-[340px] bg-white rounded-3xl p-5 shadow-2xl z-10 max-h-[90vh] flex flex-col"
             >
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-3 shrink-0">
                 <div className="flex items-center gap-2 text-rose-700 font-bold text-sm uppercase">
                   <span>Gửi Lời Chúc Trực Tiếp</span>
                 </div>
@@ -372,33 +381,39 @@ export default function TikTokStream() {
                 </button>
               </div>
 
-              <form onSubmit={handleSendMessage} className="space-y-3">
-                <div>
-                  <input
-                    type="text"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Tên của bạn..."
+              <form onSubmit={handleSendMessage} className="flex flex-col flex-1 min-h-0">
+                <div className="space-y-3 overflow-y-auto no-scrollbar flex-1 min-h-0">
+                  <div>
+                    <input
+                      type="text"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Tên của bạn..."
                     className="w-full bg-rose-50/50 border border-rose-200 p-2.5 rounded-xl text-xs outline-none focus:border-rose-500 text-gray-800"
-                  />
+                    />
+                  </div>
+                  <div>
+                    <textarea
+                      ref={textareaRef}
+                      required
+                      rows={3}
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      placeholder="Lời chúc mừng sinh nhật CLB Hermann..."
+                    className="w-full bg-rose-50/50 border border-rose-200 p-2.5 rounded-xl text-xs outline-none focus:border-rose-500 text-gray-800 resize-none overflow-y-hidden"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <textarea
-                    required
-                    rows={3}
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="Lời chúc mừng sinh nhật CLB Hermann..."
-                    className="w-full bg-rose-50/50 border border-rose-200 p-2.5 rounded-xl text-xs outline-none focus:border-rose-500 text-gray-800"
-                  />
+
+                <div className="pt-3 shrink-0 mt-auto">
+                  <button
+                    type="submit"
+                    className="w-full py-2.5 bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md cursor-pointer hover:from-rose-600 hover:to-pink-600 transition-all"
+                  >
+                    Gửi ngay
+                  </button>
                 </div>
-                <button
-                  type="submit"
-                  className="w-full py-2.5 bg-gradient-to-r from-rose-500 to-pink-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md cursor-pointer hover:from-rose-600 hover:to-pink-600 transition-all"
-                >
-                  Gửi ngay
-                </button>
               </form>
             </motion.div>
           </div>
