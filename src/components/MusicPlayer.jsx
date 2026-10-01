@@ -51,6 +51,68 @@ export default function MusicPlayer() {
 
   const wasInterruptedRef = useRef(false);
   const resumeTimeoutRef = useRef(null);
+  const hasUserToggledRef = useRef(false);
+
+  // Autoplay on load / first user interaction
+  useEffect(() => {
+    const playAudio = () => {
+      if (hasUserToggledRef.current) return;
+      if (audioRef.current) {
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true);
+              removeInteractionListeners();
+            })
+            .catch((err) => {
+              console.log("Trình duyệt chờ tương tác để phát nhạc:", err);
+            });
+        }
+      }
+    };
+
+    const handleFirstInteraction = () => {
+      playAudio();
+    };
+
+    const events = [
+      "click",
+      "touchstart",
+      "touchend",
+      "pointerdown",
+      "pointerup",
+      "mousedown",
+      "keydown",
+      "scroll",
+    ];
+
+    const removeInteractionListeners = () => {
+      events.forEach((evt) => {
+        document.removeEventListener(evt, handleFirstInteraction, true);
+        window.removeEventListener(evt, handleFirstInteraction, true);
+      });
+    };
+
+    // Try autoplay immediately
+    playAudio();
+
+    // Capture first user interaction on both document and window
+    events.forEach((evt) => {
+      document.addEventListener(evt, handleFirstInteraction, {
+        capture: true,
+        passive: true,
+      });
+      window.addEventListener(evt, handleFirstInteraction, {
+        capture: true,
+        passive: true,
+      });
+    });
+
+    return () => {
+      removeInteractionListeners();
+    };
+  }, []);
 
   useEffect(() => {
     const handleGlobalPlay = (e) => {
@@ -93,7 +155,9 @@ export default function MusicPlayer() {
     };
   }, []);
 
-  const togglePlay = () => {
+  const togglePlay = (e) => {
+    e?.stopPropagation();
+    hasUserToggledRef.current = true;
     if (isPlaying) {
       audioRef.current?.pause();
       wasInterruptedRef.current = false;
@@ -113,7 +177,16 @@ export default function MusicPlayer() {
 
   return (
     <div className="relative flex flex-col items-center pointer-events-auto">
-      <audio ref={audioRef} src={musicFile} loop playsInline preload="auto" />
+      <audio
+        ref={audioRef}
+        src={musicFile}
+        loop
+        autoPlay
+        playsInline
+        preload="auto"
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+      />
       {/* Floating Notes Container */}
       <div className="relative w-full h-0 flex justify-center">
         <AnimatePresence>
@@ -122,36 +195,39 @@ export default function MusicPlayer() {
           ))}
         </AnimatePresence>
       </div>
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={togglePlay}
-        className={`w-10 h-10 bg-white/90 backdrop-blur-md shadow-lg rounded-full ${
-          isPlaying
-            ? "text-rose-600 border-rose-400 bg-rose-50"
-            : "text-gray-500 border-gray-200"
-        } hover:bg-white transition-all flex items-center justify-center border shadow-rose-200/50 z-10 pointer-events-auto cursor-pointer`}
-        aria-label="Toggle music"
-        title={isPlaying ? "Tạm dừng nhạc" : "Bật nhạc"}
-      >
-        {isPlaying ? (
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-          >
-            <Pause size={18} />
-          </motion.div>
-        ) : (
-          <Music size={18} />
-        )}
 
-        {isPlaying && (
-          <span className="absolute -top-0.5 -right-0.5 flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-rose-600"></span>
-          </span>
-        )}
-      </motion.button>
+      <div className="relative">
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={togglePlay}
+          className={`w-10 h-10 bg-white/90 backdrop-blur-md shadow-lg rounded-full ${
+            isPlaying
+              ? "text-rose-600 border-rose-400 bg-rose-50"
+              : "text-gray-500 border-gray-200"
+          } hover:bg-white transition-all flex items-center justify-center border shadow-rose-200/50 z-10 pointer-events-auto cursor-pointer`}
+          aria-label="Toggle music"
+          title={isPlaying ? "Tạm dừng nhạc" : "Bật nhạc"}
+        >
+          {isPlaying ? (
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+            >
+              <Pause size={18} />
+            </motion.div>
+          ) : (
+            <Music size={18} />
+          )}
+
+          {isPlaying && (
+            <span className="absolute -top-0.5 -right-0.5 flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-rose-600"></span>
+            </span>
+          )}
+        </motion.button>
+      </div>
     </div>
   );
 }
